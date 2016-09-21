@@ -25,9 +25,9 @@ public class ExpansionOptions {
    // not static -> allow different options
    // but inside one options, always use same
    /**
-    * -vsfile: Options for vector space similarity
+    * -vsopts: Options for vector space similarity
     */
-   private static String vsfile = null;
+   private static String vsopts = null;
       
    
    // Parameters that can set by options (otherwise assume defaults)
@@ -86,7 +86,7 @@ public class ExpansionOptions {
     * -n: Number of best expansion sentences to get.
     * -maxSeed: Maximum seed sentence number to process.
     * -minSeed: Minimum seed sentence number to process.
-    * -vsfile: Options for vector space similarity
+    * -vsopts: Options for vector space similarity
     *
     * @param args The array to go through.
     * @throws Exception Something is not right.
@@ -163,8 +163,8 @@ public class ExpansionOptions {
             thisknown = true;
             nextknown = true;
          }
-         if (args[i].equals("-vsfile")) {
-            vsfile = args[i+1];
+         if (args[i].equals("-vsopts") | args[i].equals("-vsfile")) {
+            vsopts = args[i+1];
             thisknown = true;
             nextknown = true;
          }
@@ -235,8 +235,8 @@ public class ExpansionOptions {
     * @throws Exception Something bad!
     */
    private static Similarity getSimilarity (String optionString) throws Exception {
-      if (vsfile != null) {
-         SimilarityFactory.setVSSimArgs(vsfile);
+      if (vsopts != null) {
+         SimilarityFactory.setVSSimArgs(vsopts);
       }
       return SimilarityFactory.getSimilarity(optionString);
    }

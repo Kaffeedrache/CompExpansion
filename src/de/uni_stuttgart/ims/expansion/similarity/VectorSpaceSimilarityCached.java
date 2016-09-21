@@ -68,7 +68,7 @@ public class VectorSpaceSimilarityCached extends VectorSpaceSimilarity {
     * from the file 'vectorsFilename'.
     */
    public VectorSpaceSimilarityCached(String alias, int window, int dimensions) {
-      this("../models/wordvectors_" + alias + "_" + window + "_" + dimensions + ".ser"); // TODO keep in sync with super
+      this(getModelFileName(alias, window, dimensions)); 
    }
    
 

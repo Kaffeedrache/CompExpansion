@@ -51,6 +51,16 @@ public class VectorSpaceSimilarity extends Similarity {
    private static final BigDecimal ZERO = BigDecimal.valueOf(0);
    
    
+   /**
+    * 
+    * @param alias Just a name (to enable you to have several)
+    * @param window Token window size
+    * @param dimensions Number of dimensions/tokens in the model
+    * @return "../models/wordvectors_" + alias + "_" + window + "_" + dimensions + ".ser"
+    */
+   protected static String getModelFileName(String alias, int window, int dimensions) {
+      return "models/wordvectors_" + alias + "_" + window + "_" + dimensions + ".ser";
+   }
 
 
    /**
@@ -60,7 +70,7 @@ public class VectorSpaceSimilarity extends Similarity {
     * from the file 'filename'.
     */
    public VectorSpaceSimilarity(String alias, int window, int dimensions) {
-      this("../models/wordvectors_" + alias + "_" + window + "_" + dimensions + ".ser");
+      this(getModelFileName(alias, window, dimensions));
    }
    
 

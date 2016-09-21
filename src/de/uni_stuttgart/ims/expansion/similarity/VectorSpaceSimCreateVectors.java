@@ -37,49 +37,62 @@ public class VectorSpaceSimCreateVectors {
 
    private static int window = 3;
    private static int dimensions = 0;
-   private static String alias = "leok";
+   private static List<String> files = new ArrayList<String>();
    
    
  
-   
+
+
    /**
+    * Expected arguments:
+    * arg[0] alias - just some identifying name to enable you to
+    *    have various files (String, only letters).
+    * arg[1] window - token window size (integer).
+    * arg[2] dimensions - number of dimensions to keep
+    *     0 = keep all, do not reduce (integer).
+    * arg[3...] input files - one document per line, tab-separated,
+    *    last part is processed as the text. 
+    * 
+    * Go through all input files, take the text, create
+    * context vectors.
+    * 
+    * Expected file format: 
+    * tab-separated, one document per line,
+    * Last part is text that is processed here
+    * (this corresponds to the file format produced by the
+    * Amazon review downloader for example, but also if you
+    * just have a text file).
+    * 
     * @param args
     */
    public static void main(String[] args) {
       
-
-      if (args.length >= 2) {
-         window = Integer.parseInt(args[0]);
-         dimensions = Integer.parseInt(args[1]);
+      String alias = "";
+      if (args.length > 2) {
+         alias = args[0];
+         window = Integer.parseInt(args[1]);
+         dimensions = Integer.parseInt(args[2]);
+      } else {
+         System.err.println("Usage: <alias> <window> <dimensions> <files>*");
+         System.err.println("alias - just some identifying name to enable you to have various files (String, only letters).");
+         System.err.println("window - token window size (integer).");
+         System.err.println("dimensions - number of dimensions to keep; 0 = keep all, do not reduce (integer).");
+         System.err.println("input files - one document per line, tab-separated, last part is processed as the text.");
+         System.exit(1);
       }
       if (args.length >= 3) {
-         alias = args[2];
+         for (int i=3; i<args.length; i++) {
+            files.add(args[i]);
+            System.out.println("process file " + args[i]);
+         }
       }
 
-      System.out.println("config: " + alias + "; use window of " + window + " and " + dimensions + " dimensions.");
+      System.out.println(alias + ": use window of " + window + " and " + dimensions + " dimensions.");
       VectorSpaceSimCreateVectors bla = new VectorSpaceSimCreateVectors();
-      List<String> files = new ArrayList<String>();
       
-      for (char c : alias.toCharArray()) {
-         if (c == 'l') {
-            files.add("/mount/corpora11/d7/Data/Sentiment-Corpora/huge/electronics.txt"); // Liu HUGE dataset, electronics part
-         }
-         else if (c == 'e') {
-            files.add("/home/users3/kesslewd/Work/workspace/datavis/unlabeledCam.sentences.txt"); // epinions camera dataset
-         }
-         else if (c == 'o') {
-            files.add("/home/users3/kesslewd/Work/workspace/datavis/unlabeledCamOlga.sentences.txt"); // Olgas camera reviews from Amazon
-         }
-         else if (c == 'k') {
-            files.add("/home/users3/kesslewd/Work/workspace/datavis/camerasWK2015_batch1a.txt"); // Kesslewd camera reviews from Amazon
-         }
-         else {
-            System.out.println("Don't know the source for " + c);
-         }
-      }
       bla.doStuff(files);
       bla.reduceDimensions(dimensions);
-      String vectorOutFilename = "../models/wordvectorsTEST_" + alias + "_" + window + "_" + dimensions + ".ser";
+      String vectorOutFilename = VectorSpaceSimilarity.getModelFileName(alias, window, dimensions);
       System.out.println("Write to file " + vectorOutFilename);
       bla.writeToFile(vectorOutFilename);
       System.out.println("done.");
